@@ -3,11 +3,8 @@ module Messages exposing (..)
 import Router
 
 
-type Msg
-    = NoOp
-    | Navigate String
-    | RouteChange Router.Route
-    | InitiateLogin
+type AuthMsg
+    = InitiateLogin
     | ChangeLoginUserName String
     | ChangeLoginPassword String
     | CancelLogin
@@ -21,3 +18,10 @@ type Msg
     | SubmitSignup
     | InitiateLogout
     | AuthStateChange (Maybe String)
+
+
+type Msg
+    = NoOp
+    | Navigate String
+    | RouteChange Router.Route
+    | AuthMsg AuthMsg

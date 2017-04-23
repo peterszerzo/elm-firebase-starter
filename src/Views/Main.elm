@@ -1,6 +1,6 @@
 module Views.Main exposing (..)
 
-import Html exposing (Html, program, div, text, node, h1, p)
+import Html exposing (Html, map, program, div, text, node, h1, p)
 import Messages exposing (Msg(..))
 import Models.Main exposing (Model)
 import Views.Auth
@@ -21,5 +21,5 @@ view model =
         , h1 []
             [ text "elm-firebase-starter"
             ]
-        , Views.Auth.view model
+        , Views.Auth.view model |> map AuthMsg
         ]

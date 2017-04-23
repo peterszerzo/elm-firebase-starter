@@ -4,22 +4,30 @@ import Html exposing (Html, program, text, div, h1, h2, form, label, input, p)
 import Html.Attributes exposing (type_, autocomplete)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Models.Auth exposing (Auth(..))
-import Messages exposing (Msg(..))
+import Messages exposing (Msg(..), AuthMsg(..))
 import Models.Main exposing (Model)
+import Html.CssHelpers
+import Styles
 
 
-view : Model -> Html Msg
+{ class } =
+    Html.CssHelpers.withNamespace ""
+
+
+view : Model -> Html AuthMsg
 view model =
     case model.auth of
         NotAuthenticated ->
             div
-                []
+                [ class [ Styles.Auth ] ]
                 [ div [ onClick InitiateLogin ] [ text "Log in" ]
                 , div [ onClick InitiateSignup ] [ text "Sign up" ]
                 ]
 
         LoginFillout user pass ->
-            div []
+            div
+                [ class [ Styles.Auth ]
+                ]
                 [ h2 [] [ text "Log in" ]
                 , form [ autocomplete False, onSubmit SubmitLogin ]
                     [ label []
@@ -44,14 +52,16 @@ view model =
                 ]
 
         LoginError err ->
-            div []
+            div
+                [ class [ Styles.Auth ]
+                ]
                 [ h2 [] [ text "Login error" ]
                 , p [] [ text err ]
                 , p [ onClick InitiateLogin ] [ text "Try again" ]
                 ]
 
         SignupFillout user pass ->
-            div []
+            div [ class [ Styles.Auth ] ]
                 [ h2 [] [ text "Sign up" ]
                 , form [ onSubmit SubmitSignup ]
                     [ label []
@@ -76,23 +86,35 @@ view model =
                 ]
 
         SignupError err ->
-            div []
+            div [ class [ Styles.Auth ] ]
                 [ h2 [] [ text "Signup error" ]
                 , p [] [ text err ]
                 , p [ onClick InitiateSignup ] [ text "Try again" ]
                 ]
 
         LoginPending user ->
-            div [] [ text ("Hang in there while we log you in..") ]
+            div
+                [ class [ Styles.Auth ]
+                ]
+                [ text ("Hang in there while we log you in..")
+                ]
 
         SignupPending user ->
-            div [] [ text ("Hang in there while we sign you up..") ]
+            div
+                [ class [ Styles.Auth ]
+                ]
+                [ text ("Hang in there while we sign you up..") ]
 
         LogoutPending ->
-            div [] [ text ("Hang in there while we log you out..") ]
+            div
+                [ class [ Styles.Auth ]
+                ]
+                [ text ("Hang in there while we log you out..") ]
 
         Authenticated user ->
-            div []
+            div
+                [ class [ Styles.Auth ]
+                ]
                 [ text ("Hello, " ++ user)
                 , div [ onClick InitiateLogout ] [ text "Log out" ]
                 ]

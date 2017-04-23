@@ -3,7 +3,7 @@ module Subscriptions exposing (..)
 import Dict
 import Ports
 import Json.Decode as JD
-import Messages exposing (Msg(..))
+import Messages exposing (Msg(..), AuthMsg(..))
 
 
 type alias IncomingMessage =
@@ -30,20 +30,20 @@ subscriptions model =
                     (\{ type_, payload } ->
                         case type_ of
                             "login" ->
-                                AuthStateChange
+                                (AuthMsg << AuthStateChange)
                                     (Dict.get "user" payload)
 
                             "logout" ->
-                                AuthStateChange Nothing
+                                (AuthMsg << AuthStateChange) Nothing
 
                             "loginerror" ->
-                                UnsuccessfulLogin
+                                (AuthMsg << UnsuccessfulLogin)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
                             "signuperror" ->
-                                UnsuccessfulSignup
+                                (AuthMsg << UnsuccessfulSignup)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
