@@ -15,15 +15,15 @@ update msg model =
         ( CancelLogin, LoginFillout _ _ ) ->
             ( { model | auth = NotAuthenticated }, Cmd.none )
 
-        ( ChangeLoginUserName newUser, LoginFillout user pass ) ->
-            ( { model | auth = LoginFillout newUser pass }, Cmd.none )
+        ( ChangeLoginEmail email, LoginFillout _ pass ) ->
+            ( { model | auth = LoginFillout email pass }, Cmd.none )
 
-        ( ChangeLoginPassword newPass, LoginFillout user pass ) ->
-            ( { model | auth = LoginFillout user newPass }, Cmd.none )
+        ( ChangeLoginPassword pass, LoginFillout email _ ) ->
+            ( { model | auth = LoginFillout email pass }, Cmd.none )
 
-        ( SubmitLogin, LoginFillout user pass ) ->
-            ( { model | auth = LoginPending user }
-            , Commands.login user pass
+        ( SubmitLogin, LoginFillout email pass ) ->
+            ( { model | auth = LoginPending email }
+            , Commands.login email pass
             )
 
         ( UnsuccessfulLogin err, _ ) ->
@@ -42,23 +42,23 @@ update msg model =
         ( CancelSignup, SignupFillout _ _ ) ->
             ( { model | auth = NotAuthenticated }, Cmd.none )
 
-        ( ChangeSignupUserName newUser, SignupFillout user pass ) ->
-            ( { model | auth = SignupFillout newUser pass }, Cmd.none )
+        ( ChangeSignupEmail email, SignupFillout _ pass ) ->
+            ( { model | auth = SignupFillout email pass }, Cmd.none )
 
-        ( ChangeSignupPassword newPass, SignupFillout user pass ) ->
-            ( { model | auth = SignupFillout user newPass }, Cmd.none )
+        ( ChangeSignupPassword pass, SignupFillout email _ ) ->
+            ( { model | auth = SignupFillout email pass }, Cmd.none )
 
-        ( SubmitSignup, SignupFillout user pass ) ->
-            ( { model | auth = SignupPending user }
-            , Commands.signup user pass
+        ( SubmitSignup, SignupFillout email pass ) ->
+            ( { model | auth = SignupPending email }
+            , Commands.signup email pass
             )
 
-        ( AuthStateChange user, _ ) ->
+        ( AuthStateChange maybeEmail, _ ) ->
             ( { model
                 | auth =
-                    case user of
-                        Just u ->
-                            Authenticated u
+                    case maybeEmail of
+                        Just email ->
+                            Authenticated email
 
                         Nothing ->
                             NotAuthenticated
@@ -66,7 +66,7 @@ update msg model =
             , Cmd.none
             )
 
-        ( InitiateLogout, Authenticated user ) ->
+        ( InitiateLogout, Authenticated _ ) ->
             ( { model
                 | auth = LogoutPending
               }

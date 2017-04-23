@@ -31,7 +31,7 @@ subscriptions model =
                         case type_ of
                             "login" ->
                                 (AuthMsg << AuthStateChange)
-                                    (Dict.get "user" payload)
+                                    (Dict.get "email" payload)
 
                             "logout" ->
                                 (AuthMsg << AuthStateChange) Nothing

@@ -1,7 +1,7 @@
 module Views.Auth exposing (..)
 
 import Html exposing (Html, program, text, div, h1, h2, form, label, input, p)
-import Html.Attributes exposing (type_, autocomplete)
+import Html.Attributes exposing (type_)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Models.Auth exposing (Auth(..))
 import Messages exposing (Msg(..), AuthMsg(..))
@@ -24,25 +24,25 @@ view model =
                 , div [ onClick InitiateSignup ] [ text "Sign up" ]
                 ]
 
-        LoginFillout user pass ->
+        LoginFillout email pass ->
             div
                 [ class [ Styles.Auth ]
                 ]
                 [ h2 [] [ text "Log in" ]
-                , form [ autocomplete False, onSubmit SubmitLogin ]
+                , form
+                    [ onSubmit SubmitLogin
+                    ]
                     [ label []
                         [ text "User name"
                         , input
-                            [ autocomplete False
-                            , onInput ChangeLoginUserName
+                            [ onInput ChangeLoginEmail
                             ]
                             []
                         ]
                     , label []
                         [ text "Password"
                         , input
-                            [ autocomplete False
-                            , onInput ChangeLoginPassword
+                            [ onInput ChangeLoginPassword
                             , type_ "password"
                             ]
                             []
@@ -60,23 +60,21 @@ view model =
                 , p [ onClick InitiateLogin ] [ text "Try again" ]
                 ]
 
-        SignupFillout user pass ->
+        SignupFillout email pass ->
             div [ class [ Styles.Auth ] ]
                 [ h2 [] [ text "Sign up" ]
                 , form [ onSubmit SubmitSignup ]
                     [ label []
                         [ text "User name"
                         , input
-                            [ autocomplete False
-                            , onInput ChangeSignupUserName
+                            [ onInput ChangeSignupEmail
                             ]
                             []
                         ]
                     , label []
                         [ text "Password"
                         , input
-                            [ autocomplete False
-                            , onInput ChangeSignupPassword
+                            [ onInput ChangeSignupPassword
                             , type_ "password"
                             ]
                             []
@@ -92,14 +90,14 @@ view model =
                 , p [ onClick InitiateSignup ] [ text "Try again" ]
                 ]
 
-        LoginPending user ->
+        LoginPending email ->
             div
                 [ class [ Styles.Auth ]
                 ]
                 [ text ("Hang in there while we log you in..")
                 ]
 
-        SignupPending user ->
+        SignupPending email ->
             div
                 [ class [ Styles.Auth ]
                 ]
@@ -111,10 +109,10 @@ view model =
                 ]
                 [ text ("Hang in there while we log you out..") ]
 
-        Authenticated user ->
+        Authenticated email ->
             div
                 [ class [ Styles.Auth ]
                 ]
-                [ text ("Hello, " ++ user)
+                [ text ("Hello, " ++ email)
                 , div [ onClick InitiateLogout ] [ text "Log out" ]
                 ]

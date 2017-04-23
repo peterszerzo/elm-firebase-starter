@@ -21,8 +21,6 @@ function receiveTestData () {
   }).then(console.log.bind(console)).catch(console.log.bind(console))
 }
 
-receiveTestData()
-
 var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
 
 auth.onAuthStateChanged(function (user) {
@@ -30,7 +28,7 @@ auth.onAuthStateChanged(function (user) {
     app.ports.incoming.send({
       type: 'login',
       payload: {
-        user: user.email
+        email: user.email
       }
     })
   } else {
@@ -45,7 +43,7 @@ app.ports.outgoing.subscribe(function (data) {
   var type = data.type
   var payload = data.payload
   if (type === 'login') {
-    auth.signInWithEmailAndPassword(payload.user, payload.pass)
+    auth.signInWithEmailAndPassword(payload.email, payload.pass)
     .catch(function (err) {
       app.ports.incoming.send({
         type: 'loginerror',
@@ -55,7 +53,7 @@ app.ports.outgoing.subscribe(function (data) {
       })
     })
   } else if (type === 'signup') {
-    auth.createUserWithEmailAndPassword(payload.user, payload.pass)
+    auth.createUserWithEmailAndPassword(payload.email, payload.pass)
     .catch(function (err) {
       app.ports.incoming.send({
         type: 'signuperror',

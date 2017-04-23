@@ -5,13 +5,13 @@ import Router
 
 type AuthMsg
     = InitiateLogin
-    | ChangeLoginUserName String
+    | ChangeLoginEmail String
     | ChangeLoginPassword String
     | CancelLogin
     | SubmitLogin
     | UnsuccessfulLogin String
     | InitiateSignup
-    | ChangeSignupUserName String
+    | ChangeSignupEmail String
     | ChangeSignupPassword String
     | CancelSignup
     | UnsuccessfulSignup String

@@ -5,24 +5,24 @@ import Ports
 
 
 login : String -> String -> Cmd msg
-login user pass =
+login email pass =
     JE.object
         [ ( "type", JE.string "login" )
         , ( "payload"
           , JE.object
-                [ ( "user", JE.string user ), ( "pass", JE.string pass ) ]
+                [ ( "email", JE.string email ), ( "pass", JE.string pass ) ]
           )
         ]
         |> Ports.outgoing
 
 
 signup : String -> String -> Cmd msg
-signup user pass =
+signup email pass =
     JE.object
         [ ( "type", JE.string "signup" )
         , ( "payload"
           , JE.object
-                [ ( "user", JE.string user ), ( "pass", JE.string pass ) ]
+                [ ( "email", JE.string email ), ( "pass", JE.string pass ) ]
           )
         ]
         |> Ports.outgoing
