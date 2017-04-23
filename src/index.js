@@ -3,6 +3,8 @@ var Elm = require('./Main.elm')
 
 var root = document.getElementById('root')
 
+console.log(process.env.NODE_ENV)
+
 var config = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -28,21 +30,43 @@ var app = Elm.Main.embed(root)
 
 auth.onAuthStateChanged(function (user) {
   if (user) {
-    app.ports.incoming.send('login|' + user.email)
+    app.ports.incoming.send({
+      type: 'login',
+      payload: {
+        user: user.email
+      }
+    })
   } else {
-    app.ports.incoming.send('logout')
+    app.ports.incoming.send({
+      type: 'logout',
+      payload: {}
+    })
   }
 })
 
 app.ports.outgoing.subscribe(function (data) {
-  var dataChunks = data.split('|')
-  var type = dataChunks[0]
-  var user = dataChunks[1]
-  var pass = dataChunks[2]
+  var type = data.type
+  var payload = data.payload
   if (type === 'login') {
-    auth.signInWithEmailAndPassword(user, pass)
+    auth.signInWithEmailAndPassword(payload.user, payload.pass)
+    .catch(function (err) {
+      app.ports.incoming.send({
+        type: 'loginerror',
+        payload: {
+          message: JSON.stringify(err)
+        }
+      })
+    })
   } else if (type === 'signup') {
-    auth.createUserWithEmailAndPassword(user, pass)
+    auth.createUserWithEmailAndPassword(payload.user, payload.pass)
+    .catch(function (err) {
+      app.ports.incoming.send({
+        type: 'signuperror',
+        payload: {
+          message: JSON.stringify(err)
+        }
+      })
+    })
   } else if (type === 'logout') {
     auth.signOut()
   }

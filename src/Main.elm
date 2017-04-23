@@ -1,8 +1,11 @@
-port module Main exposing (..)
+module Main exposing (..)
 
-import Html exposing (Html, program, text, div, h1, h2, form, label, input)
+import Html exposing (Html, program, text, div, h1, h2, form, label, input, p)
 import Html.Attributes exposing (type_, autocomplete)
 import Html.Events exposing (onClick, onInput, onSubmit)
+import Commands
+import Messages exposing (Msg(..))
+import Subscriptions exposing (subscriptions)
 
 
 type Auth
@@ -13,7 +16,7 @@ type Auth
     | SignupFillout String String
     | SignupPending String
     | SignupError String
-    | LoggingOut
+    | LogoutPending
     | Authenticated String
 
 
@@ -28,22 +31,6 @@ init =
       }
     , Cmd.none
     )
-
-
-type Msg
-    = NoOp
-    | InitiateLogin
-    | ChangeLoginUserName String
-    | ChangeLoginPassword String
-    | CancelLogin
-    | SubmitLogin
-    | InitiateSignup
-    | ChangeSignupUserName String
-    | ChangeSignupPassword String
-    | CancelSignup
-    | SubmitSignup
-    | InitiateLogout
-    | AuthStateChange (Maybe String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -63,7 +50,17 @@ update msg model =
 
         ( SubmitLogin, LoginFillout user pass ) ->
             ( { model | auth = LoginPending user }
-            , outgoing ("login" ++ "|" ++ user ++ "|" ++ pass)
+            , Commands.login user pass
+            )
+
+        ( UnsuccessfulLogin err, _ ) ->
+            ( { model | auth = LoginError err }
+            , Cmd.none
+            )
+
+        ( UnsuccessfulSignup err, _ ) ->
+            ( { model | auth = SignupError err }
+            , Cmd.none
             )
 
         ( InitiateSignup, _ ) ->
@@ -80,7 +77,7 @@ update msg model =
 
         ( SubmitSignup, SignupFillout user pass ) ->
             ( { model | auth = SignupPending user }
-            , outgoing ("signup" ++ "|" ++ user ++ "|" ++ pass)
+            , Commands.signup user pass
             )
 
         ( AuthStateChange user, _ ) ->
@@ -98,9 +95,9 @@ update msg model =
 
         ( InitiateLogout, Authenticated user ) ->
             ( { model
-                | auth = LoggingOut
+                | auth = LogoutPending
               }
-            , outgoing "logout"
+            , Commands.logout
             )
 
         ( _, _ ) ->
@@ -142,6 +139,13 @@ viewLogin model =
                     ]
                 ]
 
+        LoginError err ->
+            div []
+                [ h2 [] [ text "Login error" ]
+                , p [] [ text err ]
+                , p [ onClick InitiateLogin ] [ text "Try again" ]
+                ]
+
         SignupFillout user pass ->
             div []
                 [ h2 [] [ text "Sign up" ]
@@ -167,23 +171,27 @@ viewLogin model =
                     ]
                 ]
 
+        SignupError err ->
+            div []
+                [ h2 [] [ text "Signup error" ]
+                , p [] [ text err ]
+                , p [ onClick InitiateSignup ] [ text "Try again" ]
+                ]
+
         LoginPending user ->
             div [] [ text ("Hang in there while we log you in..") ]
+
+        SignupPending user ->
+            div [] [ text ("Hang in there while we sign you up..") ]
+
+        LogoutPending ->
+            div [] [ text ("Hang in there while we log you out..") ]
 
         Authenticated user ->
             div []
                 [ text ("Hello, " ++ user)
                 , div [ onClick InitiateLogout ] [ text "Log out" ]
                 ]
-
-        _ ->
-            div [] []
-
-
-port outgoing : String -> Cmd msg
-
-
-port incoming : (String -> msg) -> Sub msg
 
 
 view : Model -> Html Msg
@@ -194,19 +202,6 @@ view model =
             ]
         , viewLogin model
         ]
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    incoming
-        (\s ->
-            if (String.left 5 s == "login") then
-                AuthStateChange (Just (String.dropLeft 6 s))
-            else if (s == "logout") then
-                AuthStateChange (Nothing)
-            else
-                NoOp
-        )
 
 
 main : Program Never Model Msg

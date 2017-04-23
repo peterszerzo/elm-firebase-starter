@@ -11,7 +11,7 @@ Authenticate and edit your profile with this fully functional starter app runnin
 
 - [x] Auth
   - [x] Signup, login and log out success cases
-  - [ ] Authentication errors
+  - [x] Authentication errors
 - [ ] Navigation
   - [ ] Add navigation
 - [ ] Environment
