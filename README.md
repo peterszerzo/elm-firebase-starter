@@ -17,7 +17,7 @@ Authenticate and edit your profile with this fully functional starter app runnin
 - [ ] Environment
   - [ ] Set flags to distinguish between development and production
 - [ ] Styles
-  - [ ] Set up elm-css in development (inject style tag)
+  - [x] Set up elm-css in development (inject style tag)
   - [ ] Set up elm-css in production
 - [ ] Profile updates
   - [ ] Edit profile description once logged in
