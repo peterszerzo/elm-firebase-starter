@@ -2,8 +2,6 @@ var Elm = require('./Main.elm')
 
 var root = document.getElementById('root')
 
-console.log(process.env.NODE_ENV)
-
 var config = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -25,7 +23,7 @@ function receiveTestData () {
 
 receiveTestData()
 
-var app = Elm.Main.embed(root)
+var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
 
 auth.onAuthStateChanged(function (user) {
   if (user) {

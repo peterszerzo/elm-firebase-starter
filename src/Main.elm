@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (program)
+import Html exposing (programWithFlags)
 import Commands
 import Messages exposing (Msg(..))
 import Subscriptions exposing (subscriptions)
@@ -9,9 +9,14 @@ import Models.Main exposing (Model)
 import Views.Main exposing (view)
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    Bool
+
+
+init : Flags -> ( Model, Cmd Msg )
+init isDevelopment =
     ( { auth = NotAuthenticated
+      , isDevelopment = isDevelopment
       }
     , Cmd.none
     )
@@ -88,9 +93,9 @@ update msg model =
             ( model, Cmd.none )
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    program
+    programWithFlags
         { view = view
         , init = init
         , update = update

@@ -4,8 +4,13 @@ Authenticate and edit your profile with this fully functional starter app runnin
 
 ## Run locally
 
-`npm install -g create-elm-app`
-`elm-app start`
+`./bin/start.sh`
+
+## Production
+
+`./bin/build.sh`
+
+Then find your goodies in `./dist`
 
 ## Features
 
@@ -14,11 +19,11 @@ Authenticate and edit your profile with this fully functional starter app runnin
   - [x] Authentication errors
 - [ ] Navigation
   - [ ] Add navigation
-- [ ] Environment
-  - [ ] Set flags to distinguish between development and production
-- [ ] Styles
+- [x] Environment
+  - [x] Set flags to distinguish between development and production
+- [x] Styles
   - [x] Set up elm-css in development (inject style tag)
-  - [ ] Set up elm-css in production
+  - [x] Set up elm-css in production
 - [ ] Profile updates
   - [ ] Edit profile description once logged in
   - [ ] Edit profile image once logged in

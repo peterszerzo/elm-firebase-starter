@@ -11,7 +11,13 @@ import Styles exposing (css)
 view : Model -> Html Msg
 view model =
     div []
-        [ node "style" [] [ compile [ css ] |> .css |> text ]
+        [ node "style"
+            []
+            [ if model.isDevelopment then
+                compile [ css ] |> .css |> text
+              else
+                text ""
+            ]
         , h1 []
             [ text "elm-firebase-starter"
             ]
