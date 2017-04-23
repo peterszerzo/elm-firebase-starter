@@ -1,7 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (programWithFlags)
+import Navigation exposing (programWithFlags)
 import Commands
+import Router
 import Messages exposing (Msg(..))
 import Subscriptions exposing (subscriptions)
 import Models.Auth exposing (Auth(..))
@@ -13,10 +14,11 @@ type alias Flags =
     Bool
 
 
-init : Flags -> ( Model, Cmd Msg )
-init isDevelopment =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init isDevelopment location =
     ( { auth = NotAuthenticated
       , isDevelopment = isDevelopment
+      , route = Router.parse location
       }
     , Cmd.none
     )
@@ -25,6 +27,12 @@ init isDevelopment =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.auth ) of
+        ( RouteChange newRoute, _ ) ->
+            ( { model | route = newRoute }, Cmd.none )
+
+        ( Navigate newUrl, _ ) ->
+            ( model, Navigation.newUrl newUrl )
+
         ( InitiateLogin, _ ) ->
             ( { model | auth = LoginFillout "" "" }, Cmd.none )
 
@@ -95,7 +103,7 @@ update msg model =
 
 main : Program Flags Model Msg
 main =
-    programWithFlags
+    programWithFlags (RouteChange << Router.parse)
         { view = view
         , init = init
         , update = update

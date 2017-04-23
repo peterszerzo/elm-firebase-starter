@@ -17,8 +17,8 @@ Then find your goodies in `./dist`
 - [x] Auth
   - [x] Signup, login and log out success cases
   - [x] Authentication errors
-- [ ] Navigation
-  - [ ] Add navigation
+- [x] Navigation
+  - [x] Add navigation
 - [x] Environment
   - [x] Set flags to distinguish between development and production
 - [x] Styles

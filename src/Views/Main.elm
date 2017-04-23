@@ -1,6 +1,6 @@
 module Views.Main exposing (..)
 
-import Html exposing (Html, program, div, text, node, h1)
+import Html exposing (Html, program, div, text, node, h1, p)
 import Messages exposing (Msg(..))
 import Models.Main exposing (Model)
 import Views.Auth
