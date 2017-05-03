@@ -27,5 +27,3 @@ Then find your goodies in `./dist`
 - [ ] Profile updates
   - [x] Edit profile description once logged in
   - [ ] Edit profile image once logged in
-- [ ] Organization
-  - [ ] Create an organization
