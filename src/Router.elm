@@ -7,7 +7,6 @@ import UrlParser exposing (..)
 type Route
     = Home
     | MyProfile
-    | Profile String
     | NotFound
 
 
@@ -16,9 +15,10 @@ matchers =
     UrlParser.oneOf
         [ s "" |> map Home
         , s "i" |> map MyProfile
-        , s "profile"
-            </> string
-            |> map (\profileId -> Profile profileId)
+          -- Dynamic url fragment example
+          -- , s "profile"
+          --     </> string
+          --     |> map (\profileId -> Profile profileId)
         ]
 
 
