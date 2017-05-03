@@ -6,28 +6,19 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import Models.Auth exposing (Auth(..))
 import Messages exposing (Msg(..), AuthMsg(..))
 import Models.Main exposing (Model)
-import Html.CssHelpers
-import Styles
-
-
-{ class } =
-    Html.CssHelpers.withNamespace ""
+import Views.Auth.Styles exposing (CssClasses(..), localClass)
 
 
 view : Model -> Html AuthMsg
 view model =
-    case model.auth of
-        NotAuthenticated ->
-            div
-                [ class [ Styles.Auth ] ]
+    div [ localClass [ Root ] ] <|
+        case model.auth of
+            NotAuthenticated ->
                 [ div [ onClick InitiateLogin ] [ text "Log in" ]
                 , div [ onClick InitiateSignup ] [ text "Sign up" ]
                 ]
 
-        LoginFillout email pass ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            LoginFillout email pass ->
                 [ h2 [] [ text "Log in" ]
                 , form
                     [ onSubmit SubmitLogin
@@ -51,17 +42,13 @@ view model =
                     ]
                 ]
 
-        LoginError err ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            LoginError err ->
                 [ h2 [] [ text "Login error" ]
                 , p [] [ text err ]
                 , p [ onClick InitiateLogin ] [ text "Try again" ]
                 ]
 
-        SignupFillout email pass ->
-            div [ class [ Styles.Auth ] ]
+            SignupFillout email pass ->
                 [ h2 [] [ text "Sign up" ]
                 , form [ onSubmit SubmitSignup ]
                     [ label []
@@ -83,36 +70,23 @@ view model =
                     ]
                 ]
 
-        SignupError err ->
-            div [ class [ Styles.Auth ] ]
+            SignupError err ->
                 [ h2 [] [ text "Signup error" ]
                 , p [] [ text err ]
                 , p [ onClick InitiateSignup ] [ text "Try again" ]
                 ]
 
-        LoginPending email ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            LoginPending email ->
                 [ text ("Hang in there while we log you in..")
                 ]
 
-        SignupPending email ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            SignupPending email ->
                 [ text ("Hang in there while we sign you up..") ]
 
-        LogoutPending ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            LogoutPending ->
                 [ text ("Hang in there while we log you out..") ]
 
-        Authenticated email ->
-            div
-                [ class [ Styles.Auth ]
-                ]
+            Authenticated email ->
                 [ text ("Hello, " ++ email)
                 , div [ onClick InitiateLogout ] [ text "Log out" ]
                 ]
