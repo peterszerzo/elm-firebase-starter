@@ -1,5 +1,6 @@
 module Update.Auth exposing (..)
 
+import Dict
 import Commands
 import Messages exposing (Msg, AuthMsg(..))
 import Models.Main exposing (Model)
@@ -53,14 +54,14 @@ update msg model =
             , Commands.signup email pass
             )
 
-        ( AuthStateChange maybeEmail, _ ) ->
+        ( AuthStateChange creds, _ ) ->
             ( { model
                 | auth =
-                    case maybeEmail of
-                        Just email ->
-                            Authenticated email
+                    case ( Dict.get "uid" creds, Dict.get "email" creds ) of
+                        ( Just uid, Just email ) ->
+                            Authenticated { uid = uid, email = email }
 
-                        Nothing ->
+                        ( _, _ ) ->
                             NotAuthenticated
               }
             , Cmd.none

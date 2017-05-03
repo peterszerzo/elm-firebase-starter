@@ -29,12 +29,8 @@ subscriptions model =
                 |> Maybe.map
                     (\{ type_, payload } ->
                         case type_ of
-                            "login" ->
-                                (AuthMsg << AuthStateChange)
-                                    (Dict.get "email" payload)
-
-                            "logout" ->
-                                (AuthMsg << AuthStateChange) Nothing
+                            "authstatechange" ->
+                                (AuthMsg << AuthStateChange) payload
 
                             "loginerror" ->
                                 (AuthMsg << UnsuccessfulLogin)

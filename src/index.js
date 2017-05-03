@@ -26,14 +26,15 @@ var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
 auth.onAuthStateChanged(function (user) {
   if (user) {
     app.ports.incoming.send({
-      type: 'login',
+      type: 'authstatechange',
       payload: {
-        email: user.email
+        email: user.email,
+        uid: user.uid
       }
     })
   } else {
     app.ports.incoming.send({
-      type: 'logout',
+      type: 'authstatechange',
       payload: {}
     })
   }

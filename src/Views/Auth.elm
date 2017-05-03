@@ -86,7 +86,7 @@ view model =
             LogoutPending ->
                 [ text ("Hang in there while we log you out..") ]
 
-            Authenticated email ->
+            Authenticated { email } ->
                 [ text ("Hello, " ++ email)
                 , div [ onClick InitiateLogout ] [ text "Log out" ]
                 ]

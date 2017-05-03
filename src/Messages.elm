@@ -1,5 +1,6 @@
 module Messages exposing (..)
 
+import Dict
 import Router
 
 
@@ -17,7 +18,7 @@ type AuthMsg
     | UnsuccessfulSignup String
     | SubmitSignup
     | InitiateLogout
-    | AuthStateChange (Maybe String)
+    | AuthStateChange (Dict.Dict String String)
 
 
 type Msg

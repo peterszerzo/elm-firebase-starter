@@ -1,5 +1,7 @@
 module Models.Auth exposing (..)
 
+import Models.User exposing (User)
+
 
 type Auth
     = NotAuthenticated
@@ -10,4 +12,4 @@ type Auth
     | SignupPending String
     | SignupError String
     | LogoutPending
-    | Authenticated String
+    | Authenticated User
