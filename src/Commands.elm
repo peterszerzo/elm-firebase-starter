@@ -62,3 +62,17 @@ saveProfile uid data =
           )
         ]
         |> Ports.outgoing
+
+
+uploadProfileImage : String -> String -> Cmd msg
+uploadProfileImage fileInputFieldId uid =
+    JE.object
+        [ ( "type", JE.string "uploadprofileimage" )
+        , ( "payload"
+          , JE.object
+                [ ( "fileInputFieldId", JE.string fileInputFieldId )
+                , ( "uid", JE.string uid )
+                ]
+          )
+        ]
+        |> Ports.outgoing

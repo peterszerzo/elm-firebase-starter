@@ -13,6 +13,7 @@ cssNamespace =
 
 type CssClasses
     = Root
+    | Section
 
 
 localClass : List class -> Html.Attribute msg
@@ -26,6 +27,11 @@ styles =
         [ width (px 600)
         , paddingTop (px 100)
         , margin auto
+        ]
+    , Css.class Section
+        [ padding (px 20)
+        , margin2 (px 20) (px 0)
+        , property "background-color" "#ededef"
         ]
     ]
         |> namespace cssNamespace

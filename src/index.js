@@ -14,6 +14,7 @@ var firebaseApp = global.firebase.initializeApp(config)
 
 var database = firebaseApp.database()
 var auth = firebaseApp.auth()
+var storage = firebaseApp.storage()
 
 var dbGet = function(ref) {
   return database.ref(ref).once('value').then(function (snapshot) {
@@ -84,6 +85,18 @@ app.ports.outgoing.subscribe(function (data) {
       app.ports.incoming.send({
         type: 'profilesaved',
         payload: {}
+      })
+    })
+  } else if (type === 'uploadprofileimage') {
+    var file = document.getElementById(payload.fileInputFieldId).files[0]
+    var ref = '/' + payload.uid + '/' + file.name
+    storage.ref(ref).put(file).then(function (snapshot) {
+      app.ports.incoming.send({
+        type: 'profileimageuploaded',
+        payload: {
+          downloadUrl: snapshot.downloadURL,
+          ref: ref
+        }
       })
     })
   }

@@ -47,4 +47,19 @@ update msg model =
             ( { model | myProfile = Models.MyProfile.Saved data }, Cmd.none )
 
         ( SaveSuccess, _, _ ) ->
+            -- Impossible state
             ( model, Cmd.none )
+
+        ( UploadProfileImage fileInputFieldId, _, Authenticated user ) ->
+            ( model, Commands.uploadProfileImage fileInputFieldId user.uid )
+
+        ( UploadProfileImage fileInputFieldId, _, _ ) ->
+            -- Impossible state
+            ( model, Cmd.none )
+
+        ( ProfileImageUploaded data, _, _ ) ->
+            let
+                _ =
+                    Debug.log "data" data
+            in
+                ( model, Cmd.none )

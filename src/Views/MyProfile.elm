@@ -1,13 +1,19 @@
 module Views.MyProfile exposing (..)
 
 import Dict
-import Html exposing (Html, program, text, div, h1, h2, form, label, input, p, button)
-import Html.Attributes exposing (id, for, value)
-import Html.Events exposing (onInput, onClick)
+import Json.Decode as JD
+import Html exposing (Html, program, text, div, h1, h2, h3, form, label, input, p, button)
+import Html.Attributes exposing (type_, id, for, value)
+import Html.Events exposing (onInput, onClick, on)
 import Views.MyProfile.Styles exposing (CssClasses(..), localClass)
 import Models exposing (Model)
 import Models.MyProfile exposing (MyProfile(..))
 import Messages.MyProfile exposing (Msg(..))
+
+
+fileInputFieldId : String
+fileInputFieldId =
+    "myprofileimage"
 
 
 fields : List { id : String, label : String }
@@ -40,22 +46,39 @@ view : Model -> Html Msg
 view model =
     div [ localClass [ Root ] ]
         [ h2 [] [ text "My profile" ]
-        , div [] <|
-            case model.myProfile of
-                NotAvailable ->
-                    [ p [] [ text "Loading.." ] ]
+        , div [ localClass [ Section ] ]
+            [ h3 []
+                [ text "Profile"
+                , div [] <|
+                    case model.myProfile of
+                        NotAvailable ->
+                            [ p [] [ text "Loading.." ] ]
 
-                Saved data ->
-                    [ viewForm data ]
+                        Saved data ->
+                            [ viewForm data ]
 
-                Saving data ->
-                    [ p [] [ text "Saving.." ] ]
+                        Saving data ->
+                            [ p [] [ text "Saving.." ] ]
 
-                UnsavedChanges data ->
-                    [ viewForm data
-                    , button [ onClick Save ] [ text "Save" ]
+                        UnsavedChanges data ->
+                            [ viewForm data
+                            , button [ onClick Save ] [ text "Save" ]
+                            ]
+
+                        _ ->
+                            [ p [] [ text "View not implemented" ] ]
+                ]
+            ]
+        , div [ localClass [ Section ] ]
+            [ h3 [] [ text "Image" ]
+            , label [ for fileInputFieldId ]
+                [ p [] [ text "Upload" ]
+                , input
+                    [ type_ "file"
+                    , id fileInputFieldId
+                    , on "change" (UploadProfileImage fileInputFieldId |> JD.succeed)
                     ]
-
-                _ ->
-                    [ p [] [ text "View not implemented" ] ]
+                    []
+                ]
+            ]
         ]
