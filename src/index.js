@@ -15,10 +15,14 @@ var firebaseApp = global.firebase.initializeApp(config)
 var database = firebaseApp.database()
 var auth = firebaseApp.auth()
 
-function receiveTestData () {
-  database.ref('/testdata').once('value').then(function (snapshot) {
+var dbGet = function(ref) {
+  return database.ref(ref).once('value').then(function (snapshot) {
     return snapshot.val()
-  }).then(console.log.bind(console)).catch(console.log.bind(console))
+  })
+}
+
+var dbSet = function(ref, data) {
+  return database.ref(ref).set(data)
 }
 
 var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
@@ -65,5 +69,22 @@ app.ports.outgoing.subscribe(function (data) {
     })
   } else if (type === 'logout') {
     auth.signOut()
+  } else if (type === 'fetchprofile') {
+    dbGet('/users/' + payload.uid).then(function (data) {
+      app.ports.incoming.send({
+        type: 'profile',
+        payload: {
+          uid: payload.uid,
+          data: JSON.stringify(data)
+        }
+      })
+    })
+  } else if (type === 'saveprofile') {
+    dbSet('/users/' + payload.uid, payload.data).then(function () {
+      app.ports.incoming.send({
+        type: 'profilesaved',
+        payload: {}
+      })
+    })
   }
 })

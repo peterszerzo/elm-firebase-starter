@@ -3,7 +3,9 @@ module Subscriptions exposing (..)
 import Dict
 import Ports
 import Json.Decode as JD
-import Messages exposing (Msg(..), AuthMsg(..))
+import Messages
+import Messages.Auth
+import Messages.MyProfile
 
 
 type alias IncomingMessage =
@@ -19,7 +21,7 @@ decoder =
         (JD.field "payload" (JD.dict JD.string))
 
 
-subscriptions : model -> Sub Msg
+subscriptions : model -> Sub Messages.Msg
 subscriptions model =
     Ports.incoming
         (\val ->
@@ -30,22 +32,29 @@ subscriptions model =
                     (\{ type_, payload } ->
                         case type_ of
                             "authstatechange" ->
-                                (AuthMsg << AuthStateChange) payload
+                                (Messages.AuthMsg << Messages.Auth.AuthStateChange) payload
 
                             "loginerror" ->
-                                (AuthMsg << UnsuccessfulLogin)
+                                (Messages.AuthMsg << Messages.Auth.UnsuccessfulLogin)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
                             "signuperror" ->
-                                (AuthMsg << UnsuccessfulSignup)
+                                (Messages.AuthMsg << Messages.Auth.UnsuccessfulSignup)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
+                            "profile" ->
+                                (Messages.MyProfileMsg << Messages.MyProfile.ReceiveData)
+                                    payload
+
+                            "profilesaved" ->
+                                Messages.MyProfileMsg Messages.MyProfile.SaveSuccess
+
                             _ ->
-                                NoOp
+                                Messages.NoOp
                     )
-                |> Maybe.withDefault NoOp
+                |> Maybe.withDefault Messages.NoOp
         )

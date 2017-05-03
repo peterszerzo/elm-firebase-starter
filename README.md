@@ -25,5 +25,5 @@ Then find your goodies in `./dist`
   - [x] Set up elm-css in development (inject style tag)
   - [x] Set up elm-css in production
 - [ ] Profile updates
-  - [ ] Edit profile description once logged in
+  - [x] Edit profile description once logged in
   - [ ] Edit profile image once logged in

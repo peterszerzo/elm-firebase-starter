@@ -4,6 +4,7 @@ import Css exposing (..)
 import Css.Elements exposing (h1, html, body, input, label)
 import Css.Namespace exposing (namespace)
 import Views.Auth.Styles
+import Views.MyProfile.Styles
 
 
 css : Stylesheet
@@ -34,7 +35,7 @@ css =
             , padding (px 4)
             , outline none
             , boxShadow none
-            , property "border" "none"
+            , property "border" "1px solid #eee"
             ]
          , label
             [ display block
@@ -42,4 +43,5 @@ css =
             ]
          ]
             ++ Views.Auth.Styles.styles
+            ++ Views.MyProfile.Styles.styles
         )

@@ -1,5 +1,6 @@
 module Commands exposing (..)
 
+import Dict
 import Json.Encode as JE
 import Ports
 
@@ -32,4 +33,32 @@ logout : Cmd msg
 logout =
     JE.object
         [ ( "type", JE.string "logout" ) ]
+        |> Ports.outgoing
+
+
+fetchProfile : String -> Cmd msg
+fetchProfile uid =
+    JE.object
+        [ ( "type", JE.string "fetchprofile" )
+        , ( "payload", JE.object [ ( "uid", JE.string uid ) ] )
+        ]
+        |> Ports.outgoing
+
+
+saveProfile : String -> Dict.Dict String String -> Cmd msg
+saveProfile uid data =
+    JE.object
+        [ ( "type", JE.string "saveprofile" )
+        , ( "payload"
+          , JE.object
+                [ ( "uid", JE.string uid )
+                , ( "data"
+                  , data
+                        |> Dict.toList
+                        |> List.map (\( key, value ) -> ( key, JE.string value ))
+                        |> JE.object
+                  )
+                ]
+          )
+        ]
         |> Ports.outgoing

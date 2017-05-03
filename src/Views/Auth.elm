@@ -3,13 +3,13 @@ module Views.Auth exposing (..)
 import Html exposing (Html, program, text, div, h1, h2, form, label, input, p)
 import Html.Attributes exposing (type_)
 import Html.Events exposing (onClick, onInput, onSubmit)
+import Models exposing (Model)
 import Models.Auth exposing (Auth(..))
-import Messages exposing (Msg(..), AuthMsg(..))
-import Models.Main exposing (Model)
+import Messages.Auth exposing (Msg(..))
 import Views.Auth.Styles exposing (CssClasses(..), localClass)
 
 
-view : Model -> Html AuthMsg
+view : Model -> Html Msg
 view model =
     div [ localClass [ Root ] ] <|
         case model.auth of

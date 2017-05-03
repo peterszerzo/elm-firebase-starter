@@ -5,9 +5,10 @@ import Router
 import Messages exposing (Msg(..))
 import Subscriptions exposing (subscriptions)
 import Models.Auth exposing (Auth(..))
-import Models.Main exposing (Model)
-import Update.Main exposing (update)
-import Views.Main exposing (view)
+import Models.MyProfile as MyProfile
+import Models exposing (Model)
+import Update exposing (update, cmdOnRouteChange)
+import Views exposing (view)
 
 
 type alias Flags =
@@ -16,12 +17,20 @@ type alias Flags =
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init isDevelopment location =
-    ( { auth = NotAuthenticated
-      , isDevelopment = isDevelopment
-      , route = Router.parse location
-      }
-    , Cmd.none
-    )
+    let
+        route =
+            Router.parse location
+
+        model =
+            { auth = NotAuthenticated
+            , isDevelopment = isDevelopment
+            , route = route
+            , myProfile = MyProfile.NotAvailable
+            }
+    in
+        ( model
+        , cmdOnRouteChange model route
+        )
 
 
 main : Program Flags Model Msg

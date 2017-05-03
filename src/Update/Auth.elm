@@ -2,12 +2,15 @@ module Update.Auth exposing (..)
 
 import Dict
 import Commands
-import Messages exposing (Msg, AuthMsg(..))
-import Models.Main exposing (Model)
+import Router
+import Messages exposing (Msg(..))
+import Messages.Auth exposing (Msg(..))
+import Models exposing (Model)
 import Models.Auth exposing (Auth(..))
+import Models.MyProfile as MyProfile
 
 
-update : AuthMsg -> Model -> ( Model, Cmd Msg )
+update : Messages.Auth.Msg -> Model -> ( Model, Cmd Messages.Msg )
 update msg model =
     case ( msg, model.auth ) of
         ( InitiateLogin, _ ) ->
@@ -55,17 +58,26 @@ update msg model =
             )
 
         ( AuthStateChange creds, _ ) ->
-            ( { model
-                | auth =
+            let
+                auth =
                     case ( Dict.get "uid" creds, Dict.get "email" creds ) of
                         ( Just uid, Just email ) ->
                             Authenticated { uid = uid, email = email }
 
                         ( _, _ ) ->
                             NotAuthenticated
-              }
-            , Cmd.none
-            )
+            in
+                ( { model
+                    | auth = auth
+                    , myProfile = MyProfile.NotAvailable
+                  }
+                , case ( auth, model.route ) of
+                    ( Authenticated auth, Router.MyProfile ) ->
+                        Commands.fetchProfile auth.uid
+
+                    ( _, _ ) ->
+                        Cmd.none
+                )
 
         ( InitiateLogout, Authenticated _ ) ->
             ( { model
