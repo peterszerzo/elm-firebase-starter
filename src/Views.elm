@@ -5,7 +5,9 @@ import Messages exposing (Msg(..))
 import Router
 import Models exposing (Model)
 import Views.Auth
+import Views.Home
 import Views.MyProfile
+import Views.Header
 import Css.File exposing (compile)
 import Styles exposing (css)
 
@@ -20,11 +22,12 @@ view model =
               else
                 text ""
             ]
-        , h1 []
-            [ text "elm-firebase-starter"
-            ]
-        , Views.Auth.view model |> map AuthMsg
+        , Views.Header.view model
+        , Views.Auth.view model
         , case model.route of
+            Router.Home ->
+                Views.Home.view
+
             Router.MyProfile ->
                 Views.MyProfile.view model |> map MyProfileMsg
 

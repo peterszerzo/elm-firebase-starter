@@ -24,7 +24,7 @@ styles : List Css.Snippet
 styles =
     [ Css.class Root
         [ position fixed
-        , top (px 30)
+        , top (px 90)
         , right (px 30)
         , width (px 300)
         , padding (px 20)

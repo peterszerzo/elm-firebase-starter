@@ -5,6 +5,8 @@ import Css.Elements exposing (h1, html, body, input, label)
 import Css.Namespace exposing (namespace)
 import Views.Auth.Styles
 import Views.MyProfile.Styles
+import Views.Header.Styles
+import Views.Home.Styles
 
 
 css : Stylesheet
@@ -25,9 +27,6 @@ css =
          , body
             [ position relative
             ]
-         , h1
-            [ property "color" "red"
-            ]
          , input
             [ display block
             , marginTop (px 6)
@@ -44,4 +43,6 @@ css =
          ]
             ++ Views.Auth.Styles.styles
             ++ Views.MyProfile.Styles.styles
+            ++ Views.Header.Styles.styles
+            ++ Views.Home.Styles.styles
         )
