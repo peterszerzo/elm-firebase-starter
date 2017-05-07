@@ -31,7 +31,7 @@ var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
 auth.onAuthStateChanged(function (user) {
   if (user) {
     app.ports.incoming.send({
-      type: 'authstatechange',
+      type: 'auth:state:change',
       payload: {
         email: user.email,
         uid: user.uid
@@ -39,7 +39,7 @@ auth.onAuthStateChanged(function (user) {
     })
   } else {
     app.ports.incoming.send({
-      type: 'authstatechange',
+      type: 'auth:state:change',
       payload: {}
     })
   }
@@ -48,56 +48,66 @@ auth.onAuthStateChanged(function (user) {
 app.ports.outgoing.subscribe(function (data) {
   var type = data.type
   var payload = data.payload
-  if (type === 'login') {
-    auth.signInWithEmailAndPassword(payload.email, payload.pass)
-    .catch(function (err) {
-      app.ports.incoming.send({
-        type: 'loginerror',
-        payload: {
-          message: JSON.stringify(err)
-        }
+  var file
+  var ref
+  switch (type) {
+    case 'login':
+      return auth.signInWithEmailAndPassword(payload.email, payload.pass)
+      .catch(function (err) {
+        app.ports.incoming.send({
+          type: 'login:error',
+          payload: {
+            message: JSON.stringify(err)
+          }
+        })
       })
-    })
-  } else if (type === 'signup') {
-    auth.createUserWithEmailAndPassword(payload.email, payload.pass)
-    .catch(function (err) {
-      app.ports.incoming.send({
-        type: 'signuperror',
-        payload: {
-          message: JSON.stringify(err)
-        }
+    case 'signup':
+      return auth.createUserWithEmailAndPassword(payload.email, payload.pass)
+      .catch(function (err) {
+        app.ports.incoming.send({
+          type: 'signup:error',
+          payload: {
+            message: JSON.stringify(err)
+          }
+        })
       })
-    })
-  } else if (type === 'logout') {
-    auth.signOut()
-  } else if (type === 'fetchprofile') {
-    dbGet('/users/' + payload.uid).then(function (data) {
-      app.ports.incoming.send({
-        type: 'profile',
-        payload: {
-          uid: payload.uid,
-          data: JSON.stringify(data)
-        }
+    case 'logout':
+      return auth.signOut()
+    case 'fetch:profile':
+      return dbGet('/users/' + payload.uid).then(function (data) {
+        app.ports.incoming.send({
+          type: 'profile',
+          payload: {
+            uid: payload.uid,
+            data: JSON.stringify(data)
+          }
+        })
       })
-    })
-  } else if (type === 'saveprofile') {
-    dbSet('/users/' + payload.uid, payload.data).then(function () {
-      app.ports.incoming.send({
-        type: 'profilesaved',
-        payload: {}
+    case 'save:profile':
+      return dbSet('/users/' + payload.uid, payload.data).then(function () {
+        app.ports.incoming.send({
+          type: 'profile:saved',
+          payload: {}
+        })
       })
-    })
-  } else if (type === 'uploadprofileimage') {
-    var file = document.getElementById(payload.fileInputFieldId).files[0]
-    var ref = '/' + payload.uid + '/' + file.name
-    storage.ref(ref).put(file).then(function (snapshot) {
-      app.ports.incoming.send({
-        type: 'profileimageuploaded',
-        payload: {
-          downloadUrl: snapshot.downloadURL,
-          ref: ref
-        }
+    case 'upload:profile:image':
+      file = document.getElementById(payload.fileInputFieldId).files[0]
+      ref = '/' + payload.uid + '/profileimage'
+      return storage.ref(ref).put(file).then(function (snapshot) {
+        app.ports.incoming.send({
+          type: 'profile:image:uploaded',
+          payload: {}
+        })
       })
-    })
+    case 'fetch:profile:image:url':
+      ref = '/' + payload.uid + '/profileimage'
+      return storage.ref(ref).getDownloadURL().then(function (url) {
+        app.ports.incoming.send({
+          type: 'profile:image:url',
+          payload: {
+            url: url
+          }
+        })
+      })
   }
 })

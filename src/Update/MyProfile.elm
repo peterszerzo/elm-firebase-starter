@@ -57,9 +57,16 @@ update msg model =
             -- Impossible state
             ( model, Cmd.none )
 
+        ( ProfileImageUploaded data, _, Authenticated user ) ->
+            ( model, Commands.fetchProfileImageUrl user.uid )
+
         ( ProfileImageUploaded data, _, _ ) ->
+            -- Impossible state
+            ( model, Cmd.none )
+
+        ( ProfileImageUrlReceived data, _, _ ) ->
             let
                 _ =
-                    Debug.log "data" data
+                    Debug.log "1" data
             in
                 ( model, Cmd.none )

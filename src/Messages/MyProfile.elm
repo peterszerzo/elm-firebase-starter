@@ -10,3 +10,4 @@ type Msg
     | SaveSuccess
     | UploadProfileImage String
     | ProfileImageUploaded (Dict.Dict String String)
+    | ProfileImageUrlReceived (Dict.Dict String String)

@@ -31,16 +31,16 @@ subscriptions model =
                 |> Maybe.map
                     (\{ type_, payload } ->
                         case type_ of
-                            "authstatechange" ->
+                            "auth:state:change" ->
                                 (Messages.AuthMsg << Messages.Auth.AuthStateChange) payload
 
-                            "loginerror" ->
+                            "login:error" ->
                                 (Messages.AuthMsg << Messages.Auth.UnsuccessfulLogin)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
-                            "signuperror" ->
+                            "signup:error" ->
                                 (Messages.AuthMsg << Messages.Auth.UnsuccessfulSignup)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
@@ -50,11 +50,14 @@ subscriptions model =
                                 (Messages.MyProfileMsg << Messages.MyProfile.ReceiveData)
                                     payload
 
-                            "profilesaved" ->
+                            "profile:saved" ->
                                 Messages.MyProfileMsg Messages.MyProfile.SaveSuccess
 
-                            "profileimageuploaded" ->
+                            "profile:image:uploaded" ->
                                 (Messages.MyProfileMsg << Messages.MyProfile.ProfileImageUploaded) payload
+
+                            "profile:image:url" ->
+                                (Messages.MyProfileMsg << Messages.MyProfile.ProfileImageUrlReceived) payload
 
                             _ ->
                                 Messages.NoOp

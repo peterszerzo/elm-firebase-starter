@@ -39,7 +39,7 @@ logout =
 fetchProfile : String -> Cmd msg
 fetchProfile uid =
     JE.object
-        [ ( "type", JE.string "fetchprofile" )
+        [ ( "type", JE.string "fetch:profile" )
         , ( "payload", JE.object [ ( "uid", JE.string uid ) ] )
         ]
         |> Ports.outgoing
@@ -48,7 +48,7 @@ fetchProfile uid =
 saveProfile : String -> Dict.Dict String String -> Cmd msg
 saveProfile uid data =
     JE.object
-        [ ( "type", JE.string "saveprofile" )
+        [ ( "type", JE.string "save:profile" )
         , ( "payload"
           , JE.object
                 [ ( "uid", JE.string uid )
@@ -67,11 +67,24 @@ saveProfile uid data =
 uploadProfileImage : String -> String -> Cmd msg
 uploadProfileImage fileInputFieldId uid =
     JE.object
-        [ ( "type", JE.string "uploadprofileimage" )
+        [ ( "type", JE.string "upload:profile:image" )
         , ( "payload"
           , JE.object
                 [ ( "fileInputFieldId", JE.string fileInputFieldId )
                 , ( "uid", JE.string uid )
+                ]
+          )
+        ]
+        |> Ports.outgoing
+
+
+fetchProfileImageUrl : String -> Cmd msg
+fetchProfileImageUrl uid =
+    JE.object
+        [ ( "type", JE.string "fetch:profile:image:url" )
+        , ( "payload"
+          , JE.object
+                [ ( "uid", JE.string uid )
                 ]
           )
         ]
