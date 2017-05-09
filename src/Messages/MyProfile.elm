@@ -8,6 +8,3 @@ type Msg
     | EditField String String
     | Save
     | SaveSuccess
-    | UploadProfileImage String
-    | ProfileImageUploaded (Dict.Dict String String)
-    | ProfileImageUrlReceived (Dict.Dict String String)

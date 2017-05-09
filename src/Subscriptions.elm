@@ -53,12 +53,6 @@ subscriptions model =
                             "profile:saved" ->
                                 Messages.MyProfileMsg Messages.MyProfile.SaveSuccess
 
-                            "profile:image:uploaded" ->
-                                (Messages.MyProfileMsg << Messages.MyProfile.ProfileImageUploaded) payload
-
-                            "profile:image:url" ->
-                                (Messages.MyProfileMsg << Messages.MyProfile.ProfileImageUrlReceived) payload
-
                             _ ->
                                 Messages.NoOp
                     )

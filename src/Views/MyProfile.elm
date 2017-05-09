@@ -1,7 +1,6 @@
 module Views.MyProfile exposing (..)
 
 import Dict
-import Json.Decode as JD
 import Html exposing (Html, program, text, div, h1, h2, h3, form, label, input, p, button)
 import Html.Attributes exposing (type_, id, for, value)
 import Html.Events exposing (onInput, onClick, on)
@@ -67,18 +66,6 @@ view model =
 
                         _ ->
                             [ p [] [ text "View not implemented" ] ]
-                ]
-            ]
-        , div [ localClass [ Section ] ]
-            [ h3 [] [ text "Image" ]
-            , label [ for fileInputFieldId ]
-                [ p [] [ text "Upload" ]
-                , input
-                    [ type_ "file"
-                    , id fileInputFieldId
-                    , on "change" (UploadProfileImage fileInputFieldId |> JD.succeed)
-                    ]
-                    []
                 ]
             ]
         ]

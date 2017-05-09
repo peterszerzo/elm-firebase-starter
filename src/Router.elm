@@ -15,10 +15,6 @@ matchers =
     UrlParser.oneOf
         [ s "" |> map Home
         , s "i" |> map MyProfile
-          -- Dynamic url fragment example
-          -- , s "profile"
-          --     </> string
-          --     |> map (\profileId -> Profile profileId)
         ]
 
 

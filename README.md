@@ -24,6 +24,3 @@ Then find your goodies in `./dist`
 - [x] Styles
   - [x] Set up elm-css in development (inject style tag)
   - [x] Set up elm-css in production
-- [ ] Profile updates
-  - [x] Edit profile description once logged in
-  - [ ] Edit profile image once logged in

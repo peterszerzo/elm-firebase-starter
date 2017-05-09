@@ -90,24 +90,5 @@ app.ports.outgoing.subscribe(function (data) {
           payload: {}
         })
       })
-    case 'upload:profile:image':
-      file = document.getElementById(payload.fileInputFieldId).files[0]
-      ref = '/' + payload.uid + '/profileimage'
-      return storage.ref(ref).put(file).then(function (snapshot) {
-        app.ports.incoming.send({
-          type: 'profile:image:uploaded',
-          payload: {}
-        })
-      })
-    case 'fetch:profile:image:url':
-      ref = '/' + payload.uid + '/profileimage'
-      return storage.ref(ref).getDownloadURL().then(function (url) {
-        app.ports.incoming.send({
-          type: 'profile:image:url',
-          payload: {
-            url: url
-          }
-        })
-      })
   }
 })
