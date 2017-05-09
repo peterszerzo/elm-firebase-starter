@@ -25,7 +25,6 @@ init isDevelopment location =
             { auth = NotAuthenticated
             , isDevelopment = isDevelopment
             , route = route
-            , myProfile = MyProfile.NotAvailable
             }
     in
         ( model

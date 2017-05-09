@@ -69,10 +69,19 @@ update msg model =
             in
                 ( { model
                     | auth = auth
-                    , myProfile = MyProfile.NotAvailable
+                    , route =
+                        case model.route of
+                            Router.MyProfile (MyProfile.NotAvailable) ->
+                                model.route
+
+                            Router.MyProfile _ ->
+                                Router.MyProfile MyProfile.NotAvailable
+
+                            _ ->
+                                model.route
                   }
                 , case ( auth, model.route ) of
-                    ( Authenticated auth, Router.MyProfile ) ->
+                    ( Authenticated auth, Router.MyProfile _ ) ->
                         Commands.fetchProfile auth.uid
 
                     ( _, _ ) ->

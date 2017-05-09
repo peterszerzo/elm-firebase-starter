@@ -28,8 +28,8 @@ view model =
             Router.Home ->
                 Views.Home.view
 
-            Router.MyProfile ->
-                Views.MyProfile.view model |> map MyProfileMsg
+            Router.MyProfile myProfile ->
+                Views.MyProfile.view myProfile |> map MyProfileMsg
 
             _ ->
                 div [] []

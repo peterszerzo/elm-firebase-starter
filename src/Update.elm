@@ -13,7 +13,7 @@ import Update.MyProfile
 cmdOnRouteChange : Model -> Router.Route -> Cmd Msg
 cmdOnRouteChange model newRoute =
     case ( model.auth, newRoute ) of
-        ( Models.Auth.Authenticated auth, Router.MyProfile ) ->
+        ( Models.Auth.Authenticated auth, Router.MyProfile _ ) ->
             Commands.fetchProfile auth.uid
 
         ( _, _ ) ->
@@ -22,20 +22,28 @@ cmdOnRouteChange model newRoute =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        RouteChange newRoute ->
+    case ( msg, model.route ) of
+        ( RouteChange newRoute, _ ) ->
             ( { model | route = newRoute }
             , cmdOnRouteChange model newRoute
             )
 
-        Navigate newUrl ->
+        ( Navigate newUrl, _ ) ->
             ( model, Navigation.newUrl newUrl )
 
-        AuthMsg authMsg ->
+        ( AuthMsg authMsg, _ ) ->
             Update.Auth.update authMsg model
 
-        MyProfileMsg myProfileMsg ->
-            Update.MyProfile.update myProfileMsg model
+        ( MyProfileMsg myProfileMsg, Router.MyProfile myProfile ) ->
+            let
+                ( newMyProfile, cmd ) =
+                    Update.MyProfile.update model.auth myProfileMsg myProfile
+            in
+                ( { model | route = Router.MyProfile newMyProfile }, cmd )
 
-        NoOp ->
+        ( MyProfileMsg myProfileMsg, _ ) ->
+            -- Impossible state
+            ( model, Cmd.none )
+
+        ( NoOp, _ ) ->
             ( model, Cmd.none )

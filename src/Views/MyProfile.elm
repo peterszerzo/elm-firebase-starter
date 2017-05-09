@@ -5,7 +5,6 @@ import Html exposing (Html, program, text, div, h1, h2, h3, form, label, input, 
 import Html.Attributes exposing (type_, id, for, value)
 import Html.Events exposing (onInput, onClick, on)
 import Views.MyProfile.Styles exposing (CssClasses(..), localClass)
-import Models exposing (Model)
 import Models.MyProfile exposing (MyProfile(..))
 import Messages.MyProfile exposing (Msg(..))
 
@@ -41,15 +40,15 @@ viewForm data =
         )
 
 
-view : Model -> Html Msg
-view model =
+view : Models.MyProfile.MyProfile -> Html Msg
+view myProfile =
     div [ localClass [ Root ] ]
         [ h2 [] [ text "My profile" ]
         , div [ localClass [ Section ] ]
             [ h3 []
                 [ text "Profile"
                 , div [] <|
-                    case model.myProfile of
+                    case myProfile of
                         NotAvailable ->
                             [ p [] [ text "Loading.." ] ]
 

@@ -13,3 +13,8 @@ type MyProfile
     | UnsavedChanges ProfileData
     | Saving ProfileData
     | SaveError ProfileData String
+
+
+init : MyProfile
+init =
+    NotAvailable
