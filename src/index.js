@@ -10,19 +10,19 @@ var config = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
 }
-var firebaseApp = global.firebase.initializeApp(config)
+var firebaseApp = global.firebase && global.firebase.initializeApp(config)
 
-var database = firebaseApp.database()
-var auth = firebaseApp.auth()
-var storage = firebaseApp.storage()
+var database = firebaseApp && firebaseApp.database()
+var auth = firebaseApp && firebaseApp.auth()
+var storage = firebaseApp && firebaseApp.storage()
 
-var dbGet = function(ref) {
+var dbGet = function (ref) {
   return database.ref(ref).once('value').then(function (snapshot) {
     return snapshot.val()
   })
 }
 
-var dbSet = function(ref, data) {
+var dbSet = function (ref, data) {
   return database.ref(ref).set(data)
 }
 

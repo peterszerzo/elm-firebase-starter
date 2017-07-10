@@ -4,13 +4,14 @@ Authenticate and edit your profile with this fully functional starter app runnin
 
 ## Run locally
 
+`npm install -g create-elm-app@1.1.1`
 `./bin/start.sh`
 
 ## Production
 
 `./bin/build.sh`
 
-Then find your goodies in `./dist`
+Then find your goodies in `./build`
 
 ## Features
 
