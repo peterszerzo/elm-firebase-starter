@@ -2,12 +2,12 @@ module Router exposing (..)
 
 import Navigation
 import UrlParser exposing (..)
-import Models.MyProfile
+import Page.MyProfile
 
 
 type Route
     = Home
-    | MyProfile Models.MyProfile.MyProfile
+    | MyProfile Page.MyProfile.Model
     | NotFound
 
 
@@ -15,7 +15,7 @@ matchers : UrlParser.Parser (Route -> a) a
 matchers =
     UrlParser.oneOf
         [ s "" |> map Home
-        , s "i" |> map (MyProfile Models.MyProfile.init)
+        , s "i" |> map (MyProfile Page.MyProfile.init)
         ]
 
 

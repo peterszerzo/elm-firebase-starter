@@ -2,13 +2,13 @@ module Tests exposing (..)
 
 import Test exposing (..)
 import Expect
-import Utilities
+import Misc
 
 
 all : Test
 all =
     describe "A Test Suite"
-        [ test "Utilities" <|
+        [ test "Misc" <|
             \() ->
-                Expect.equal (Utilities.addTwoInts 2 3) 5
+                Expect.equal (Misc.addTwoInts 2 3) 5
         ]

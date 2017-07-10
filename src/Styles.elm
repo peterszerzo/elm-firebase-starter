@@ -4,9 +4,9 @@ import Css exposing (..)
 import Css.Elements exposing (h1, html, body, input, label)
 import Css.Namespace exposing (namespace)
 import Views.Auth.Styles
-import Views.MyProfile.Styles
 import Views.Header.Styles
-import Views.Home.Styles
+import Page.MyProfile.Styles
+import Page.Home.Styles
 
 
 css : Stylesheet
@@ -42,7 +42,7 @@ css =
             ]
          ]
             ++ Views.Auth.Styles.styles
-            ++ Views.MyProfile.Styles.styles
             ++ Views.Header.Styles.styles
-            ++ Views.Home.Styles.styles
+            ++ Page.MyProfile.Styles.styles
+            ++ Page.Home.Styles.styles
         )

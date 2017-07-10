@@ -4,8 +4,7 @@ import Dict
 import Ports
 import Json.Decode as JD
 import Messages
-import Messages.Auth
-import Messages.MyProfile
+import Page.MyProfile
 
 
 type alias IncomingMessage =
@@ -32,26 +31,26 @@ subscriptions model =
                     (\{ type_, payload } ->
                         case type_ of
                             "auth:state:change" ->
-                                (Messages.AuthMsg << Messages.Auth.AuthStateChange) payload
+                                (Messages.AuthChange << Messages.AuthStateChange) payload
 
                             "login:error" ->
-                                (Messages.AuthMsg << Messages.Auth.UnsuccessfulLogin)
+                                (Messages.AuthChange << Messages.UnsuccessfulLogin)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
                             "signup:error" ->
-                                (Messages.AuthMsg << Messages.Auth.UnsuccessfulSignup)
+                                (Messages.AuthChange << Messages.UnsuccessfulSignup)
                                     (Dict.get "message" payload
                                         |> Maybe.withDefault "Err"
                                     )
 
                             "profile" ->
-                                (Messages.MyProfileMsg << Messages.MyProfile.ReceiveData)
+                                (Messages.MyProfileChange << Page.MyProfile.ReceiveData)
                                     payload
 
                             "profile:saved" ->
-                                Messages.MyProfileMsg Messages.MyProfile.SaveSuccess
+                                Messages.MyProfileChange Page.MyProfile.SaveSuccess
 
                             _ ->
                                 Messages.NoOp

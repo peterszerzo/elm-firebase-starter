@@ -2,62 +2,60 @@ module Update.Auth exposing (..)
 
 import Dict
 import Commands
+import Json.Encode as JE
 import Router
-import Messages exposing (Msg(..))
-import Messages.Auth exposing (Msg(..))
-import Models exposing (Model)
-import Models.Auth exposing (Auth(..))
-import Models.MyProfile as MyProfile
+import Messages exposing (Msg(..), AuthMsg(..))
+import Data.Auth exposing (Auth(..))
 
 
-update : Messages.Auth.Msg -> Model -> ( Model, Cmd Messages.Msg )
-update msg model =
-    case ( msg, model.auth ) of
-        ( InitiateLogin, _ ) ->
-            ( { model | auth = LoginFillout "" "" }, Cmd.none )
+update : Router.Route -> Messages.AuthMsg -> Auth -> ( Auth, Maybe JE.Value )
+update route msg auth =
+    case ( route, msg, auth ) of
+        ( _, InitiateLogin, _ ) ->
+            ( LoginFillout "" "", Nothing )
 
-        ( CancelLogin, LoginFillout _ _ ) ->
-            ( { model | auth = NotAuthenticated }, Cmd.none )
+        ( _, CancelLogin, LoginFillout _ _ ) ->
+            ( NotAuthenticated, Nothing )
 
-        ( ChangeLoginEmail email, LoginFillout _ pass ) ->
-            ( { model | auth = LoginFillout email pass }, Cmd.none )
+        ( _, ChangeLoginEmail email, LoginFillout _ pass ) ->
+            ( LoginFillout email pass, Nothing )
 
-        ( ChangeLoginPassword pass, LoginFillout email _ ) ->
-            ( { model | auth = LoginFillout email pass }, Cmd.none )
+        ( _, ChangeLoginPassword pass, LoginFillout email _ ) ->
+            ( LoginFillout email pass, Nothing )
 
-        ( SubmitLogin, LoginFillout email pass ) ->
-            ( { model | auth = LoginPending email }
-            , Commands.login email pass
+        ( _, SubmitLogin, LoginFillout email pass ) ->
+            ( LoginPending email
+            , Commands.login email pass |> Just
             )
 
-        ( UnsuccessfulLogin err, _ ) ->
-            ( { model | auth = LoginError err }
-            , Cmd.none
+        ( _, UnsuccessfulLogin err, _ ) ->
+            ( LoginError err
+            , Nothing
             )
 
-        ( UnsuccessfulSignup err, _ ) ->
-            ( { model | auth = SignupError err }
-            , Cmd.none
+        ( _, UnsuccessfulSignup err, _ ) ->
+            ( SignupError err
+            , Nothing
             )
 
-        ( InitiateSignup, _ ) ->
-            ( { model | auth = SignupFillout "" "" }, Cmd.none )
+        ( _, InitiateSignup, _ ) ->
+            ( SignupFillout "" "", Nothing )
 
-        ( CancelSignup, SignupFillout _ _ ) ->
-            ( { model | auth = NotAuthenticated }, Cmd.none )
+        ( _, CancelSignup, SignupFillout _ _ ) ->
+            ( NotAuthenticated, Nothing )
 
-        ( ChangeSignupEmail email, SignupFillout _ pass ) ->
-            ( { model | auth = SignupFillout email pass }, Cmd.none )
+        ( _, ChangeSignupEmail email, SignupFillout _ pass ) ->
+            ( SignupFillout email pass, Nothing )
 
-        ( ChangeSignupPassword pass, SignupFillout email _ ) ->
-            ( { model | auth = SignupFillout email pass }, Cmd.none )
+        ( _, ChangeSignupPassword pass, SignupFillout email _ ) ->
+            ( SignupFillout email pass, Nothing )
 
-        ( SubmitSignup, SignupFillout email pass ) ->
-            ( { model | auth = SignupPending email }
-            , Commands.signup email pass
+        ( _, SubmitSignup, SignupFillout email pass ) ->
+            ( SignupPending email
+            , Commands.signup email pass |> Just
             )
 
-        ( AuthStateChange creds, _ ) ->
+        ( route, AuthStateChange creds, _ ) ->
             let
                 auth =
                     case ( Dict.get "uid" creds, Dict.get "email" creds ) of
@@ -67,33 +65,19 @@ update msg model =
                         ( _, _ ) ->
                             NotAuthenticated
             in
-                ( { model
-                    | auth = auth
-                    , route =
-                        case model.route of
-                            Router.MyProfile (MyProfile.NotAvailable) ->
-                                model.route
-
-                            Router.MyProfile _ ->
-                                Router.MyProfile MyProfile.NotAvailable
-
-                            _ ->
-                                model.route
-                  }
-                , case ( auth, model.route ) of
+                ( auth
+                , case ( auth, route ) of
                     ( Authenticated auth, Router.MyProfile _ ) ->
-                        Commands.fetchProfile auth.uid
+                        Commands.fetchProfile auth.uid |> Just
 
                     ( _, _ ) ->
-                        Cmd.none
+                        Nothing
                 )
 
-        ( InitiateLogout, Authenticated _ ) ->
-            ( { model
-                | auth = LogoutPending
-              }
-            , Commands.logout
+        ( _, InitiateLogout, Authenticated _ ) ->
+            ( LogoutPending
+            , Commands.logout |> Just
             )
 
-        ( _, _ ) ->
-            ( model, Cmd.none )
+        ( _, _, _ ) ->
+            ( auth, Nothing )

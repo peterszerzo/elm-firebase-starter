@@ -1,4 +1,4 @@
-module Views.MyProfile.Styles exposing (..)
+module Page.Home.Styles exposing (..)
 
 import Html
 import Html.CssHelpers
@@ -8,12 +8,11 @@ import Css.Namespace exposing (namespace)
 
 cssNamespace : String
 cssNamespace =
-    "myprofile"
+    "home"
 
 
 type CssClasses
     = Root
-    | Section
 
 
 localClass : List class -> Html.Attribute msg
@@ -24,14 +23,6 @@ localClass =
 styles : List Css.Snippet
 styles =
     [ Css.class Root
-        [ width (px 600)
-        , paddingTop (px 100)
-        , margin auto
-        ]
-    , Css.class Section
-        [ padding (px 20)
-        , margin2 (px 20) (px 0)
-        , property "background-color" "#ededef"
-        ]
+        [ paddingTop (px 100) ]
     ]
         |> namespace cssNamespace

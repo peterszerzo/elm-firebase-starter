@@ -1,6 +1,6 @@
-module Models.Auth exposing (..)
+module Data.Auth exposing (..)
 
-import Models.User exposing (User)
+import Data.User exposing (User)
 
 
 type Auth

@@ -1,4 +1,4 @@
-module Models.User exposing (..)
+module Data.User exposing (..)
 
 import Json.Decode as JD
 import Json.Encode as JE

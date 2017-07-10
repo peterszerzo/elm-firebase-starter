@@ -1,13 +1,30 @@
 module Messages exposing (..)
 
+import Dict
 import Router
-import Messages.Auth
-import Messages.MyProfile
+import Page.MyProfile
+
+
+type AuthMsg
+    = InitiateLogin
+    | ChangeLoginEmail String
+    | ChangeLoginPassword String
+    | CancelLogin
+    | SubmitLogin
+    | UnsuccessfulLogin String
+    | InitiateSignup
+    | ChangeSignupEmail String
+    | ChangeSignupPassword String
+    | CancelSignup
+    | UnsuccessfulSignup String
+    | SubmitSignup
+    | InitiateLogout
+    | AuthStateChange (Dict.Dict String String)
 
 
 type Msg
     = NoOp
     | Navigate String
     | RouteChange Router.Route
-    | AuthMsg Messages.Auth.Msg
-    | MyProfileMsg Messages.MyProfile.Msg
+    | AuthChange AuthMsg
+    | MyProfileChange Page.MyProfile.Msg

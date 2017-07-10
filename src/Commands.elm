@@ -2,10 +2,9 @@ module Commands exposing (..)
 
 import Dict
 import Json.Encode as JE
-import Ports
 
 
-login : String -> String -> Cmd msg
+login : String -> String -> JE.Value
 login email pass =
     JE.object
         [ ( "type", JE.string "login" )
@@ -14,10 +13,9 @@ login email pass =
                 [ ( "email", JE.string email ), ( "pass", JE.string pass ) ]
           )
         ]
-        |> Ports.outgoing
 
 
-signup : String -> String -> Cmd msg
+signup : String -> String -> JE.Value
 signup email pass =
     JE.object
         [ ( "type", JE.string "signup" )
@@ -26,26 +24,23 @@ signup email pass =
                 [ ( "email", JE.string email ), ( "pass", JE.string pass ) ]
           )
         ]
-        |> Ports.outgoing
 
 
-logout : Cmd msg
+logout : JE.Value
 logout =
     JE.object
         [ ( "type", JE.string "logout" ) ]
-        |> Ports.outgoing
 
 
-fetchProfile : String -> Cmd msg
+fetchProfile : String -> JE.Value
 fetchProfile uid =
     JE.object
         [ ( "type", JE.string "fetch:profile" )
         , ( "payload", JE.object [ ( "uid", JE.string uid ) ] )
         ]
-        |> Ports.outgoing
 
 
-saveProfile : String -> Dict.Dict String String -> Cmd msg
+saveProfile : String -> Dict.Dict String String -> JE.Value
 saveProfile uid data =
     JE.object
         [ ( "type", JE.string "save:profile" )
@@ -61,31 +56,3 @@ saveProfile uid data =
                 ]
           )
         ]
-        |> Ports.outgoing
-
-
-uploadProfileImage : String -> String -> Cmd msg
-uploadProfileImage fileInputFieldId uid =
-    JE.object
-        [ ( "type", JE.string "upload:profile:image" )
-        , ( "payload"
-          , JE.object
-                [ ( "fileInputFieldId", JE.string fileInputFieldId )
-                , ( "uid", JE.string uid )
-                ]
-          )
-        ]
-        |> Ports.outgoing
-
-
-fetchProfileImageUrl : String -> Cmd msg
-fetchProfileImageUrl uid =
-    JE.object
-        [ ( "type", JE.string "fetch:profile:image:url" )
-        , ( "payload"
-          , JE.object
-                [ ( "uid", JE.string uid )
-                ]
-          )
-        ]
-        |> Ports.outgoing
