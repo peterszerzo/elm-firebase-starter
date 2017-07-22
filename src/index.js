@@ -1,6 +1,6 @@
 var Elm = require('./Main.elm')
 
-var root = document.getElementById('root')
+// Set up Firebase
 
 var config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -26,7 +26,14 @@ var dbSet = function (ref, data) {
   return database.ref(ref).set(data)
 }
 
+// Start Elm app
+
+var root = document.getElementById('root')
 var app = Elm.Main.embed(root, process.env.NODE_ENV !== 'production')
+
+// Set up communication between Elm and Firebase
+// Information is exchanged in a { type: String, payload: Object } fashion,
+// where the payload object contains only strings.
 
 auth.onAuthStateChanged(function (user) {
   if (user) {

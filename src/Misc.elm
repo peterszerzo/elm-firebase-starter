@@ -1,4 +1,4 @@
-module Utilities exposing (..)
+module Misc exposing (..)
 
 -- Dummy utilities method to make sure tests are working
 
