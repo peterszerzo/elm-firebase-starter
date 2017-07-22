@@ -10,52 +10,52 @@ import Data.Auth exposing (Auth(..))
 
 update : Router.Route -> Messages.AuthMsg -> Auth -> ( Auth, Maybe JE.Value )
 update route msg auth =
-    case ( route, msg, auth ) of
-        ( _, InitiateLogin, _ ) ->
+    case ( msg, auth ) of
+        ( InitiateLogin, _ ) ->
             ( LoginFillout "" "", Nothing )
 
-        ( _, CancelLogin, LoginFillout _ _ ) ->
+        ( CancelLogin, LoginFillout _ _ ) ->
             ( NotAuthenticated, Nothing )
 
-        ( _, ChangeLoginEmail email, LoginFillout _ pass ) ->
+        ( ChangeLoginEmail email, LoginFillout _ pass ) ->
             ( LoginFillout email pass, Nothing )
 
-        ( _, ChangeLoginPassword pass, LoginFillout email _ ) ->
+        ( ChangeLoginPassword pass, LoginFillout email _ ) ->
             ( LoginFillout email pass, Nothing )
 
-        ( _, SubmitLogin, LoginFillout email pass ) ->
+        ( SubmitLogin, LoginFillout email pass ) ->
             ( LoginPending email
             , Commands.login email pass |> Just
             )
 
-        ( _, UnsuccessfulLogin err, _ ) ->
+        ( UnsuccessfulLogin err, _ ) ->
             ( LoginError err
             , Nothing
             )
 
-        ( _, UnsuccessfulSignup err, _ ) ->
+        ( UnsuccessfulSignup err, _ ) ->
             ( SignupError err
             , Nothing
             )
 
-        ( _, InitiateSignup, _ ) ->
+        ( InitiateSignup, _ ) ->
             ( SignupFillout "" "", Nothing )
 
-        ( _, CancelSignup, SignupFillout _ _ ) ->
+        ( CancelSignup, SignupFillout _ _ ) ->
             ( NotAuthenticated, Nothing )
 
-        ( _, ChangeSignupEmail email, SignupFillout _ pass ) ->
+        ( ChangeSignupEmail email, SignupFillout _ pass ) ->
             ( SignupFillout email pass, Nothing )
 
-        ( _, ChangeSignupPassword pass, SignupFillout email _ ) ->
+        ( ChangeSignupPassword pass, SignupFillout email _ ) ->
             ( SignupFillout email pass, Nothing )
 
-        ( _, SubmitSignup, SignupFillout email pass ) ->
+        ( SubmitSignup, SignupFillout email pass ) ->
             ( SignupPending email
             , Commands.signup email pass |> Just
             )
 
-        ( route, AuthStateChange creds, _ ) ->
+        ( AuthStateChange creds, _ ) ->
             let
                 auth =
                     case ( Dict.get "uid" creds, Dict.get "email" creds ) of
@@ -74,10 +74,10 @@ update route msg auth =
                         Nothing
                 )
 
-        ( _, InitiateLogout, Authenticated _ ) ->
+        ( InitiateLogout, Authenticated _ ) ->
             ( LogoutPending
             , Commands.logout |> Just
             )
 
-        ( _, _, _ ) ->
+        ( _, _ ) ->
             ( auth, Nothing )
